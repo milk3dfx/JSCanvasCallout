@@ -75,12 +75,3 @@ function createCanvasDescriptionCallout(p){
 	}
 	return canvasCallout;
 }
-
-function init(){
-	console.log("function: init");
-	
-	//var cCallout = createCanvasDescriptionCallout("Anime are Japanese animated productions usually featuring hand-drawn or computer animation. The word is the abbreviated pronunciation of animation in Japanese, where this term references all animation.", 200);
-	var cCallout = createCanvasDescriptionCallout({text:"Hello!!!", fontSize:30});
-	
-	document.body.appendChild(cCallout);
-}
