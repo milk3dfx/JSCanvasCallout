@@ -7,6 +7,7 @@ function createCanvasDescriptionCallout(p){
 	p.font = p.font||"Georgia";
 	p.fontSize = p.fontSize||14;
 	p.textColor = p.textColor||"#000000";
+	p.textAlign = p.textAlign||"left";
 	p.maxWidth = p.maxWidth||200;
 	p.padding = p.padding||10;
 	p.paddingLeft = p.paddingLeft||p.padding;
@@ -131,7 +132,12 @@ function createCanvasDescriptionCallout(p){
 	//Draw text
 	ctx.fillStyle = p.textColor;
 	for(var i=0; i<lines.length; i++){
-		ctx.fillText(lines[i], x0 + p.paddingLeft, y0 + (i+1)*dy + p.paddingTop);
+		var xoffset=0;
+		if(p.textAlign == "center")
+			xoffset = (p.maxWidth - ctx.measureText(lines[i]).width)/2;
+		if(p.textAlign == "right")
+			xoffset = (p.maxWidth - ctx.measureText(lines[i]).width);
+		ctx.fillText(lines[i], x0 + p.paddingLeft + xoffset, y0 + (i+1)*dy + p.paddingTop);
 	}
 	return canvasCallout;
 }
