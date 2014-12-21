@@ -5,8 +5,20 @@
 function init(){
 	console.log("function: init");
 	
-	//var cCallout = createCanvasDescriptionCallout("Anime are Japanese animated productions usually featuring hand-drawn or computer animation. The word is the abbreviated pronunciation of animation in Japanese, where this term references all animation.", 200);
-	var cCallout = createCanvasDescriptionCallout({text:"Hello!!!", fontSize:30});
+	var cCallout = createCanvasDescriptionCallout({
+		text:"Anime are Japanese animated productions usually featuring hand-drawn or computer animation. The word is the abbreviated pronunciation of animation in Japanese, where this term references all animation.",
+		//text:"Hello!!!",
+		fontSize:15,
+		padding:20,
+		paddingTop:10,
+		borderColor: "#AA5533",
+		backgroundColor: "#DDFFEE",
+		margin:100, 
+		pointerSide:"left",
+		pointerStart:0.3,
+		pointerEnd: 0.5,
+		pointerWidth: 0.2
+	});
 	
 	document.body.appendChild(cCallout);
 }

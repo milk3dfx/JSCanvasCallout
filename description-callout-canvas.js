@@ -1,16 +1,51 @@
 function createCanvasDescriptionCallout(p){
+	// Parameters check
 	if (p === undefined){
 		p = {};
 	}
 	p.text = p.text||".";
-	p.font = p.font||"Georgia"
+	p.font = p.font||"Georgia";
 	p.fontSize = p.fontSize||14;
+	p.textColor = p.textColor||"#000000";
 	p.maxWidth = p.maxWidth||200;
+	p.padding = p.padding||10;
+	p.paddingLeft = p.paddingLeft||p.padding;
+	p.paddingRight = p.paddingRight||p.padding;
+	p.paddingTop = p.paddingTop||p.padding;
+	p.paddingBottom = p.paddingBottom||p.padding;
+	p.borderWidth = p.borderWidth||2;
+	p.borderColor = p.borderColor||"#000000";
+	p.backgroundColor = p.backgroundColor||"#FFFFFF";
+	p.margin = p.margin||30;
+	p.pointerSide = p.pointerSide||"left";
+	p.pointerWidth = p.pointerWidth||0.3;
+	p.pointerStart = p.pointerStart||0.5;
+	if(p.pointerEnd==undefined)
+		p.pointerEnd=0.5;
 
-	var x0 = 100;
-	var y0 = 5;
+	if(p.pointerStart<p.pointerWidth/2)
+		p.pointerStart=p.pointerWidth/2;
+	if(1-p.pointerStart < p.pointerWidth/2)
+		p.pointerStart = 1 - p.pointerWidth/2;
+	
+	// Body coordinates
+	var x0, y0;
+	if(p.pointerSide=="left"){
+		x0 = p.margin;
+		y0 = p.borderWidth/2;
+	}
+	if(p.pointerSide=="right"||p.pointerSide=="bottom"){
+		x0 = p.borderWidth/2;
+		y0 = p.borderWidth/2;
+	}
+	if(p.pointerSide=="top"){
+		x0 = p.borderWidth/2;
+		y0 = p.margin;
+	}
+	// Lines offset
 	var dy = Math.ceil(p.fontSize*1.25);
 	
+	// Split text on words
 	var words = p.text.split(' ');
     var line = '';
 	var lines = [];
@@ -48,30 +83,55 @@ function createCanvasDescriptionCallout(p){
 		CalloutWidth = ctx.measureText(lines[0]).width;
 	
 	// Resize canvas
-	canvasCallout.width = x0 + CalloutWidth + 5;
-    canvasCallout.height = y0 + CalloutHeight + 15;
+	canvasCallout.width = p.margin + CalloutWidth + p.paddingLeft + p.paddingRight + p.borderWidth*2;
+    canvasCallout.height = p.margin + CalloutHeight + p.paddingTop + p.paddingBottom + p.borderWidth*2;
+	
+	var bodyWidth = CalloutWidth + p.paddingLeft + p.paddingRight;
+	var bodyHeight = CalloutHeight + p.paddingTop + p.paddingBottom;
+	
 	ctx = canvasCallout.getContext("2d");
 	ctx.font = p.fontSize.toString() + "px " + p.font;
 	
 	// Draw callout body
 	ctx.beginPath();
-    ctx.moveTo(x0-10, y0-3);
-    ctx.lineTo(x0 + CalloutWidth +3, y0-3);
-    ctx.lineTo(x0 + CalloutWidth +3, y0 + CalloutHeight+12);
-    ctx.lineTo(x0-10, y0 + CalloutHeight+12);
-	ctx.lineTo(x0-10, y0 + 30);
-	ctx.lineTo(5, y0 + 30);
-	ctx.lineTo(x0-10, y0-3);
+    ctx.moveTo(x0, y0);
+	if(p.pointerSide=="top"){
+		ctx.lineTo(x0 + bodyWidth*(p.pointerStart-p.pointerWidth/2), y0);
+		ctx.lineTo(x0 + bodyWidth*p.pointerEnd, p.borderWidth/2);
+		ctx.lineTo(x0 + bodyWidth*(p.pointerStart+p.pointerWidth/2), y0);
+	}
+    ctx.lineTo(x0 + bodyWidth, y0);
+	if(p.pointerSide=="right"){
+		ctx.lineTo(x0 + bodyWidth, bodyHeight*(p.pointerStart-p.pointerWidth/2));
+		ctx.lineTo(bodyWidth + p.margin - p.borderWidth/2, bodyHeight*p.pointerEnd);
+		ctx.lineTo(x0 + bodyWidth, bodyHeight*(p.pointerStart+p.pointerWidth/2));
+	}
+    ctx.lineTo(x0 + bodyWidth, y0 + bodyHeight);
+	if(p.pointerSide=="bottom"){
+		ctx.lineTo(x0 + bodyWidth*(p.pointerStart+p.pointerWidth/2), y0 + bodyHeight);
+		ctx.lineTo(x0 + bodyWidth*p.pointerEnd, bodyHeight + p.margin + p.borderWidth/2);
+		ctx.lineTo(x0 + bodyWidth*(p.pointerStart-p.pointerWidth/2), y0 + bodyHeight);
+	}
+    ctx.lineTo(x0, y0 + bodyHeight);
+	if(p.pointerSide=="left"){
+		ctx.lineTo(x0, bodyHeight*(p.pointerStart+p.pointerWidth/2));
+		ctx.lineTo(p.borderWidth/2, bodyHeight*p.pointerEnd);
+		ctx.lineTo(x0, bodyHeight*(p.pointerStart-p.pointerWidth/2));
+	}
+	ctx.lineTo(x0, y0);
 	ctx.closePath();
 	
-	ctx.fillStyle = '#FFFFFF';
+	ctx.fillStyle = p.backgroundColor;
     ctx.fill();
-    ctx.lineWidth = 2;
+	
+	ctx.strokeStyle = p.borderColor;
+    ctx.lineWidth = p.borderWidth;
     ctx.stroke();
 	
-	ctx.fillStyle = '#000000';
+	//Draw text
+	ctx.fillStyle = p.textColor;
 	for(var i=0; i<lines.length; i++){
-		ctx.fillText(lines[i], x0, y0 + (i+1)*dy);
+		ctx.fillText(lines[i], x0 + p.paddingLeft, y0 + (i+1)*dy + p.paddingTop);
 	}
 	return canvasCallout;
 }
