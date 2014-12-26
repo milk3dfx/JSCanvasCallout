@@ -1,6 +1,6 @@
 JSCanvasCallout
 ============
-```
+```javascript
 createCanvasDescriptionCallout(parameters)
 ```
 Function creates canvas with callout image.
@@ -28,7 +28,7 @@ Function creates canvas with callout image.
 * pointerEnd
 
 ## Example
-```
+```javascript
 var cCallout = createCanvasDescriptionCallout({
 	text:"Hello!!!",
 	fontSize:15,
